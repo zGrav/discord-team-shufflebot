@@ -49,21 +49,39 @@ client.on("messageCreate", async (message) => {
 
   if (command === "maketeams") {
     try {
-      const usernames = args[0]?.split(",") || [];
-      const playersPerTeam = parseInt(args[1]) || 5;
-      const shuffleTimes = parseInt(args[2]) || 3;
-      const numberOfTeams = parseInt(args[3]) || 2;
+      const mentions = [];
+      let index = 0;
 
-      if (usernames.length === 0) {
+      while (
+        args[index] &&
+        args[index].startsWith("<@") &&
+        args[index].endsWith(">")
+      ) {
+        mentions.push(args[index].slice(2, -1));
+        index++;
+      }
+      const playersPerTeam = parseInt(args[index]) || 5;
+      const shuffleTimes = parseInt(args[index + 1]) || 3;
+      const numberOfTeams = parseInt(args[index + 2]) || 2;
+
+      if (mentions.length === 0) {
         return message.reply(
-          "Please provide a list of users separated by comma (w/o spaces, e.g z,str,dmn...). Extra options: players per team (default to 5), amount of times to shuffle teams (default to 3), number of teams (default to 2)."
+          "Please provide a list of users separated by space (e.g @z @str ...). Extra options: players per team (default to 5), amount of times to shuffle teams (default to 3), number of teams (default to 2)."
         );
       }
-      if (numberOfTeams < 2) {
+      if (numberOfTeams !== 1 && numberOfTeams < 2) {
         return message.reply("There must be at least 2 teams.");
       }
+      if (numberOfTeams !== 1 && mentions.length < 2) {
+        return message.reply(`There must be at least 2 players minimum.`);
+      }
+      if (numberOfTeams !== 1 && mentions.length < playersPerTeam) {
+        return message.reply(
+          `There must be at least ${playersPerTeam} players.`
+        );
+      }
 
-      const shuffled = shuffleArray([...usernames], shuffleTimes);
+      const shuffled = shuffleArray([...mentions], shuffleTimes);
 
       const teams = [];
       for (let i = 0; i < numberOfTeams; i++) {
@@ -73,7 +91,7 @@ client.on("messageCreate", async (message) => {
       for (let i = 0; i < shuffled.length; i++) {
         const teamIndex = i % numberOfTeams;
         if (teams[teamIndex].length < playersPerTeam) {
-          teams[teamIndex].push(shuffled[i]);
+          teams[teamIndex].push(`<@${shuffled[i]}>`);
         }
       }
 
