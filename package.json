@@ -1,0 +1,12 @@
+{
+  "name": "discord-team-shufflebot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:zGrav/discord-team-shufflebot.git",
+  "author": "David Silva <me@zgrav.pro>",
+  "license": "GNU3",
+  "private": false,
+  "dependencies": {
+    "discord.js": "^14.17.2"
+  }
+}
