@@ -49,14 +49,14 @@ client.on("messageCreate", async (message) => {
 
   if (command === "maketeams") {
     try {
-      const usernames = args[0]?.split(",") || [];
+      const usernames = args[0]?.split(", ") || [];
       const playersPerTeam = parseInt(args[1]) || 5;
-      const shuffleTimes = parseInt(args[2]) || 1;
+      const shuffleTimes = parseInt(args[2]) || 3;
       const numberOfTeams = parseInt(args[3]) || 2;
 
       if (usernames.length === 0) {
         return message.reply(
-          "Please provide a list of usernames separated by commas (w/o space, e.g z,str,dmn...). Extra options: players per team (default to 5), amount of times to shuffle teams (default to 1), number of teams (default to 2)."
+          "Please provide a list of usernames separated by comma+space (e.g @z, @str, @dmn...). Extra options: players per team (default to 5), amount of times to shuffle teams (default to 1), number of teams (default to 2)."
         );
       }
       if (numberOfTeams < 2) {
